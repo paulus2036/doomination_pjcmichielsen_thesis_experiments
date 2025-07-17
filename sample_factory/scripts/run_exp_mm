@@ -1,0 +1,57 @@
+#!/bin/bash
+source /data/vscail/anaconda3/bin/activate doomicrl
+# export MUJOCO_GL=egl
+export OMP_NUM_THREADS=6
+cd $HOME/ccarl/Doomination
+counter=0
+
+
+### for one run:
+CUDA_VISIBLE_DEVICES=$1 python sample_factory/doom/train_vizdoom.py \
+    --seed $2 \
+    --algo PPO \
+    --train_for_env_steps 10_000_000_000 \
+    --env_steps_per_env $3 \
+    --envs volcanic_venture remedy_rush armament_burden detonators_dilemma \
+    --with_wandb True \
+    --wandb_user bramgrooten \
+    --wandb_project ccarl \
+    --record \   # should be on by default
+    --log_heatmap False \
+    --console_log ${!#} \
+
+
+
+
+
+### for multiple runs:
+#repeats=5
+
+#for env in walker-walk cartpole-swingup; do
+#  domain=$(echo $env | cut -d '-' -f 1)
+#  task=$(echo $env | cut -d '-' -f 2)
+#
+#  for ((i=0; i<repeats; i++)); do
+#    current_seed=$(($2 + counter))
+#    counter=$((counter+10))
+#    CUDA_VISIBLE_DEVICES=$1 python src/train.py \
+#        --seed $current_seed \
+#        --algorithm $3 \
+#        --encoder $4 \
+#        --augment $5 \
+#        --domain_name $domain \
+#        --task_name $task \
+#        --batch_size $8 \
+#        --train_env_mode $9 \
+#        --eval_mode ${10} \
+#        --train_steps ${11} \
+#        --log_dir ${12} \
+#        --console_log ${!#} \
+#        --save_mask \
+#        --save_aug
+#  done
+#done
+
+
+
+
